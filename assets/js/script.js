@@ -9,6 +9,43 @@
          (currentQuestion, questionNumber)
          => {
 
+        // store possible answers to question
+        const answers= [];
+
+        // for each available answer 
+
+        for(letter in currentQuestion.answers){
+            answers.push(
+            '<label> <input type="radio" name="question${questionNumber}" value="${letter}"> ${letter} : ${currentQuestion.answers[letter]}</label>'
+            );
+        }
+
+        // add question and answers to output
+        output.push( '<div class="slide"> <div class="question"> ${currentQuestion.question.question} </div> <div class="answers"> ${answers,join("")} </div> </div>'
+        );
+      }
+     );
+
+     quizContainer.innerHTML = output.join('');
+    }
+
+    function showResult(){
+
+        //answer containers from the quiz
+        const answerContainers = quizContainer.querySelectorAll('.answers'
+        );
+
+        // keep track of user's answers
+        let numCorrect = 0;
+
+        // for each question
+        myQuestion.forEach(
+            (currentQuestion, questionNumber) => {
+
+        // find selected answer
+        const answerContainer = answerContainer[questionNumber]; const selector = 'input[name=question${questionNumber}]:checked';
+        const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
             function getTimeRemaining(endtime) {
                 const total = Date.parse(endtime) - Date.parse(new Date());
                 const seconds = Math.floor((total / 1000) % 60);

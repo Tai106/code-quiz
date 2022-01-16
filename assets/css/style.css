@@ -1,7 +1,10 @@
 body{
     font-size: 25px;
     font-family: 'Times New Roman', Times, serif;
-    color: rgb(163, 148, 148)
+    color: rgb(163, 148, 148);
+    font-weight: 300;
+    text-align: center;
+    background-color: #fff;
 }
 
 header {
@@ -17,14 +20,22 @@ header {
   }
 
 .question{
-    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .answers {
  margin-bottom: 15px;
+ text-align: left;
+ display: inline-block;
 }
 
-#submit{
+.answer label{
+    display: block;
+    margin-bottom: 10px
+}
+
+button{
     font-family: 'Times New Roman', Times, serif;
     font-size: 25px;
     background-color: beige;
@@ -34,8 +45,9 @@ header {
     padding: 25px;
     cursor: pointer;
     margin-bottom: 15px;
-
 }
+
+
 
 footer {
     width: 100%;
