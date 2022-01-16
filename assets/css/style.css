@@ -1,0 +1,83 @@
+body{
+    font-size: 25px;
+    font-family: 'Times New Roman', Times, serif;
+    color: rgb(163, 148, 148)
+}
+
+header {
+    background: var(--secondary);
+    padding: 30px 25px;
+    border-bottom: 5px solid var(--primary);
+  }
+  
+  header p {
+    color: var(--tertiary);
+    margin: 5px 0 20px;
+    font-size: 2rem;
+  }
+
+.question{
+    font-weight: 500;
+}
+
+.answers {
+ margin-bottom: 15px;
+}
+
+#submit{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 25px;
+    background-color: beige;
+    color:burlywood;
+    border: 0px;
+    border-radius: 4px;
+    padding: 25px;
+    cursor: pointer;
+    margin-bottom: 15px;
+
+}
+
+footer {
+    width: 100%;
+    background: var(--secondary);
+    color: var(--tertiary);
+    font-size: 2.4rem;
+    padding: 20px;
+    border-top: 5px solid var(--primary);
+  }
+
+  
+  h1{
+    color: #396;
+    font-weight: 100;
+    font-size: 40px;
+    margin: 40px 0px 20px;
+  }
+  
+  #clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 30px;
+  }
+  
+  #clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00BF96;
+    display: inline-block;
+  }
+  
+  #clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+  }
+  
+  .smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+  }
