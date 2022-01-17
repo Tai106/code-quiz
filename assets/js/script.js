@@ -1,27 +1,25 @@
-(function(){
- //Start quiz
- function buildQuiz(){
+function showResults(questions, quizContainer, resultsContainer){
      //variable to store the HTML output 
      const output = [];
 
      // questions
-     myQuestions.forEach(
-         (currentQuestion, questionNumber)
-         => {
+     myQuestions.forEach( (currentQuestion, questionNumber) => {
 
         // store possible answers to question
-        const answers= [];
+        const answers = [];
 
         // for each available answer 
 
         for(letter in currentQuestion.answers){
-            answers.push(
-            '<label> <input type="radio" name="question${questionNumber}" value="${letter}"> ${letter} : ${currentQuestion.answers[letter]}</label>'
+            
+        answers.push(
+            `<label> <input type="radio" name="question${questionNumber}" value="${letter}"> ${letter} : ${currentQuestion.answers[letter]}</label>`
             );
         }
 
         // add question and answers to output
-        output.push( '<div class="slide"> <div class="question"> ${currentQuestion.question.question} </div> <div class="answers"> ${answers,join("")} </div> </div>'
+        output.push( 
+            `<div class="slide"> <div class="question"> ${currentQuestion.question.question} </div> <div class="answers"> ${answers,join("")} </div> </div>`
         );
       }
      );
@@ -29,77 +27,46 @@
      quizContainer.innerHTML = output.join('');
     }
 
-    function showResult(){
+        function showResults(){
 
         //answer containers from the quiz
-        const answerContainers = quizContainer.querySelectorAll('.answers'
-        );
+        const answerContainers = quizContainer.querySelectorAll('.answers');
 
         // keep track of user's answers
         let numCorrect = 0;
 
         // for each question
-        myQuestion.forEach(
-            (currentQuestion, questionNumber) => {
+        myQuestions.forEach( (currentQuestion, questionNumber) => {
 
         // find selected answer
-        const answerContainer = answerContainer[questionNumber]; const selector = 'input[name=question${questionNumber}]:checked';
+        const answerContainer = answerContainers[questionNumber]; const selector = 'input[name=question${questionNumber}]:checked';
         const userAnswer = (answerContainer.querySelector(selector) || {}).value;
 
         // if answer is correct then....
         if(userAnswer === currentQuestion.correctAnswer){
-
         // add to the number of correct answers
-            
-            numCorrect++;
+        numCorrect++;
 
         // color green if answer is correct 
-
-            answerContainer[questionNumber].style.color = 'lightgreen';
+        answerContainer[questionNumber].style.color = 'lightgreen';
         }
 
         // color is red if question is not answerd or wrong 
         else{
 
-            answerContainer[questionNumber].style.color = 'red';
+         answerContainer[questionNumber].style.color = 'red';
         }
     });
 
     // show the number of correct answer
-    resultContainer.innerHTML ='${numCorrect} out of ${myQuestions.lenght}';
+    resultsContainer.innerHTML ='${numCorrect} out of ${myQuestions.lenght}';
 }
 
-function showSlide(n) {
-
-    slides[currentSlide].classList.remove('active-slide');
-    slides[n].classList.add('active-slide');
-    currentSlide = n;
-    if(currentSlide === 0){previousButton.style.display = 'none';
-}
-else{
- previousButton.style.display = 'inline-black';
-}
-if(currentSlide === slides.lenght-1){
-    nextButton.style.display = 'none';
-    submitButton.style.display = 'inline-block';
-}
-else{
-    nextButton,style.display = 'inline-block'; submitButton.style.display = 'none';
-}
-}
-
-function showNextSlide() {
-    showSlide(currentSlide + 1);
-}
-
-function showPreviousSlide() {
-    showSlide(currentSlide - 1);
-}
-
-// variables
+    // variables
 const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const submitbutton = document.getElementById('submit');
+
 const myQuestions = [
     {
         question: "Arrays in javaScript can be used to store?",
@@ -148,61 +115,38 @@ let currentSlide = 0;
 showSlide(currentSlide);
 
 // Event listeners
-    submitbutton.addEventListner('click',showResult);
+    submitbutton.addEventListner('click',showResults);
 
     previousButton.addEventListener("click", showPreviousSlide);
 
     nextButton.addEventListener("click", showNextSlide);
-})();
 
 
+function showSlide(n) {
+
+    slides[currentSlide].classList.remove('active-slide');
+    slides[n].classList.add('active-slide');
+    currentSlide = n;
+    if(currentSlide === 0){previousButton.style.display = 'none';
+}
+else{
+ previousButton.style.display = 'inline-block';
+}
+if(currentSlide === slides.lenght-1){
+    nextButton.style.display = 'none';
+    submitbutton.style.display = 'inline-block';
+}
+else{
+    nextButton,style.display = 'inline-block'; submitbutton.style.display = 'none';
+}
+}
+
+function showNextSlide() {
+    showSlide(currentSlide + 1);
+}
+
+function showPreviousSlide() {
+    showSlide(currentSlide - 1);
+}
 
 
-
-
-
-
-
-
-
-
-
-            function getTimeRemaining(endtime) {
-                const total = Date.parse(endtime) - Date.parse(new Date());
-                const seconds = Math.floor((total / 1000) % 60);
-                const minutes = Math.floor((total / 1000 / 60) % 60);
-                const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-                
-                
-                return {
-                  total,
-                  hours,
-                  minutes,
-                  seconds
-                };
-              }
-              
-              function initializeClock(id, endtime) {
-                const clock = document.getElementById(id);
-                const hoursSpan = clock.querySelector('.hours');
-                const minutesSpan = clock.querySelector('.minutes');
-                const secondsSpan = clock.querySelector('.seconds');
-              
-                function updateClock() {
-                  const t = getTimeRemaining(endtime);
-              
-                  hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
-                  minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-                  secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
-              
-                  if (t.total <= 0) {
-                    clearInterval(timeinterval);
-                  }
-                }
-              
-                updateClock();
-                const timeinterval = setInterval(updateClock, 1000);
-              }
-              
-              const deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
-              initializeClock('clockdiv', deadline);

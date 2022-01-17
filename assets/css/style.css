@@ -47,7 +47,7 @@ button{
     margin-bottom: 15px;
 }
 
-.slide{
+.slide {
     position:absolute;
     left: 0px;
     width: 100%;
@@ -56,12 +56,12 @@ button{
     transition: opacity 0.5s;
 }
 
-.active-slide{
+.active-slide {
     opacity: 1;
     z-index: 2;
 }
 
-.quiz-container{
+.quiz-container {
     position: relative;
     height: 200px;
     margin-top: 40px;
