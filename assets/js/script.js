@@ -1,152 +1,106 @@
-function showResults(questions, quizContainer, resultsContainer){
-     //variable to store the HTML output 
-     const output = [];
+const startButton = document.getElementById('start-btn')
+const nextButton = document.getElementById('next-btn')
+const questionContainerElement = document.getElementById('question-container')
+const questionElement = document.getElementById('question')
+const answerButtonsElement = document.getElementById('answer-buttons')
 
-     // questions
-     myQuestions.forEach( (currentQuestion, questionNumber) => {
+let shuffledQuestions, currentQuestionIndex
 
-        // store possible answers to question
-        const answers = [];
+startButton.addEventListener('click', startGame)
+nextButton.addEventListener('click', () => {
+    currentQuestionIndex++
+    setNextQuestion()
+})
 
-        // for each available answer 
+function startGame() {
+ startButton.classList.add('hide')
+ shuffledQuestions = questions.sort(() => Math.random() - .5)
+ currentQuestionIndex = 0
+ questionContainerElement.classList.remove('hide')
+ setNextQuestion()
+}
 
-        for(letter in currentQuestion.answers){
-            
-        answers.push(
-            `<label> <input type="radio" name="question${questionNumber}" value="${letter}"> ${letter} : ${currentQuestion.answers[letter]}</label>`
-            );
+function setNextQuestion() {
+    resetState()
+    showQuestion(shuffledQuestions[currentQuestionIndex])
+}
+
+function showQuestion(question) {
+    questionContainerElement.innerText = question.question
+    question.answers.forEach(answer => {
+        const button = document.createElement('button')
+        button.innerText = answer.text
+        button.classList.add('btn')
+        if (answer.correct) {
+            button.dataset.correct = answer.correct
         }
+        button.addEventListener('click', selectAnswer)
+        answerButtonsElement.appendChild(button)
+    })
+}
 
-        // add question and answers to output
-        output.push( 
-            `<div class="slide"> <div class="question"> ${currentQuestion.question.question} </div> <div class="answers"> ${answers,join("")} </div> </div>`
-        );
-      }
-     );
 
-     quizContainer.innerHTML = output.join('');
+function resetState() {
+    clearStatusClass(document.body)
+    nextButton.classList.add('hide')
+    while (answerButtonsElement.firstChild) {
+        answerButtonsElement.removeChild(answerButtonsElement.firstChild)
+    }
+}
+
+function selectAnswer(e) {
+    const selectedButton = e.target
+    const correct = selectedButton.dataset.correct
+    setStatusClass(document.body, correct)
+    Array.from(answerButtonsElement.children).forEach(button => {
+        setStatusClass(button, button.dataset.correct)
+    })
+    if (shuffledQuestions.lenght > currentQuestionIndex + 1) {
+        nextButton.classList.remove('hide')
+    } else {
+        startButton.innerText = 'Restart'
+        startButton.classList.remove('hide')
+    }
     }
 
-        function showResults(){
-
-        //answer containers from the quiz
-        const answerContainers = quizContainer.querySelectorAll('.answers');
-
-        // keep track of user's answers
-        let numCorrect = 0;
-
-        // for each question
-        myQuestions.forEach( (currentQuestion, questionNumber) => {
-
-        // find selected answer
-        const answerContainer = answerContainers[questionNumber]; const selector = 'input[name=question${questionNumber}]:checked';
-        const userAnswer = (answerContainer.querySelector(selector) || {}).value;
-
-        // if answer is correct then....
-        if(userAnswer === currentQuestion.correctAnswer){
-        // add to the number of correct answers
-        numCorrect++;
-
-        // color green if answer is correct 
-        answerContainer[questionNumber].style.color = 'lightgreen';
-        }
-
-        // color is red if question is not answerd or wrong 
-        else{
-
-         answerContainer[questionNumber].style.color = 'red';
-        }
-    });
-
-    // show the number of correct answer
-    resultsContainer.innerHTML ='${numCorrect} out of ${myQuestions.lenght}';
+function setStatusClass(element, correct) {
+    clearStatusClass(element)
+    if (correct) {
+        element.classList.add('correct')
+    } else {
+        element.classList.add('wrong')
+    }
 }
 
-    // variables
-const quizContainer = document.getElementById('quiz');
-const resultsContainer = document.getElementById('results');
-const submitbutton = document.getElementById('submit');
+function clearStatusClass(element) {
+    element.classList.remove('correct')
+    element.classList.remove('wrong')
+}
 
-const myQuestions = [
+const questions = [
     {
-        question: "Arrays in javaScript can be used to store?",
-        answers: {
-            a: "number and strings",
-            b: "other arrays",
-            c: "booleans",
-            d: "all of the above"
-        },
-        correctAnswer: "d"
+        question: 'Arrays in javaScript can be used to store?',
+        answers: [
+            { text: 'booleans', correct: true },
+            { text: 'console.log', corect: false }
+        ]
     },
-    { 
-
-        question: "Commonly used data types Do Not Include",
-        answers: {
-            a: "strings",
-            b: "booleans",
-            c: "alerts",
-            d: "numbers"
-        },
-        correctAnswer: "c"
-    },
-    {
-
-        question: "A very useful tool used during development and debugging for printing content to the debugger is",
-        answers: {
-            a: "javaScript",
-            b: "termianl/bash",
-            c: "for loops",
-            d: "console.log"
-        },
-        correctAnswer: "d"
-    },
-];
-
-// begin
-buildQuiz();
-
-// pagination
-const previousButton = document.getElementById("previous");
-const nextButton = document.getElementById("next");
-const slides = document.querySelectorAll(".Slide");
-let currentSlide = 0;
-
-// show the first slide
-showSlide(currentSlide);
-
-// Event listeners
-    submitbutton.addEventListner('click',showResults);
-
-    previousButton.addEventListener("click", showPreviousSlide);
-
-    nextButton.addEventListener("click", showNextSlide);
-
-
-function showSlide(n) {
-
-    slides[currentSlide].classList.remove('active-slide');
-    slides[n].classList.add('active-slide');
-    currentSlide = n;
-    if(currentSlide === 0){previousButton.style.display = 'none';
-}
-else{
- previousButton.style.display = 'inline-block';
-}
-if(currentSlide === slides.lenght-1){
-    nextButton.style.display = 'none';
-    submitbutton.style.display = 'inline-block';
-}
-else{
-    nextButton,style.display = 'inline-block'; submitbutton.style.display = 'none';
-}
-}
-
-function showNextSlide() {
-    showSlide(currentSlide + 1);
-}
-
-function showPreviousSlide() {
-    showSlide(currentSlide - 1);
-}
-
-
+{
+    question: 'A very useful tool used during development and debugging for printing content to the debugger is?',
+    answers: [
+        { text: 'javaScript', correct: false },
+        { text: 'terminal/bash', correct: false },
+        { text: 'for loops', correct: false },
+        { text: 'console.log', correct: true }
+    ]
+},
+{
+    question: 'Commonly used data types DO Not Include?',
+    answers: [
+        { text: 'strings', correct: false },
+        { text: 'booleans', correct: false },
+        { text: 'alerts', correct: true },
+        { text: 'numbers', correct: false }
+    ]
+  },
+]

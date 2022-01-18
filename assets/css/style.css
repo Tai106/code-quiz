@@ -1,113 +1,88 @@
-body{
-    font-size: 25px;
-    font-family: 'Times New Roman', Times, serif;
-    color: rgb(163, 148, 148);
-    font-weight: 300;
-    text-align: center;
-    background-color: #fff;
+*, *::before, *::after {
+    box-sizing: border-box;
+    
 }
 
-header {
-    background: var(--secondary);
-    padding: 30px 25px;
-    border-bottom: 5px solid var(--primary);
-  }
-  
-  header p {
-    color: var(--tertiary);
-    margin: 5px 0 20px;
-    font-size: 2rem;
-  }
-
-.question{
-    font-size: 20px;
-    margin-bottom: 10px;
+:root {
+    --hue-neutral: 200;
+    --hue-wrong: 0;
+    --hue-correct: 145;
 }
 
-.answers {
- margin-bottom: 15px;
- text-align: left;
- display: inline-block;
+body {
+    --hue: var(--hue-neutral);
+    padding: 0%;
+    margin: 0%;
+    display: flex;
+    width: 100vh;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: hsl(var(--hue), 100%, 20%);
 }
 
-.answer label{
-    display: block;
-    margin-bottom: 10px
+body.correct {
+    --hue: var(--hue-correct);
 }
 
-button{
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 25px;
-    background-color: beige;
-    color:burlywood;
-    border: 0px;
-    border-radius: 4px;
-    padding: 25px;
-    cursor: pointer;
-    margin-bottom: 15px;
-}
+body.wrong {
+    --hue: var(--hue-wrong);
+} 
 
-.slide {
-    position:absolute;
-    left: 0px;
-    width: 100%;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.5s;
-}
-
-.active-slide {
-    opacity: 1;
-    z-index: 2;
-}
-
-.quiz-container {
-    position: relative;
-    height: 200px;
-    margin-top: 40px;
-}
-
-footer {
-    width: 100%;
-    background: var(--secondary);
-    color: var(--tertiary);
-    font-size: 2.4rem;
-    padding: 20px;
-    border-top: 5px solid var(--primary);
-  }
-
-  
-  h1{
-    color: #396;
-    font-weight: 100;
-    font-size: 40px;
-    margin: 40px 0px 20px;
-  }
-  
-  #clockdiv{
-    font-family: sans-serif;
-    color: #fff;
-    display: inline-block;
-    font-weight: 100;
-    text-align: center;
-    font-size: 30px;
-  }
-  
-  #clockdiv > div{
+.container {
+    width: 800px;
+    max-width: 80%;
+    background-color: cornsilk;
+    border-radius: 5px;
     padding: 10px;
-    border-radius: 3px;
-    background: #00BF96;
-    display: inline-block;
-  }
-  
-  #clockdiv div > span{
-    padding: 15px;
-    border-radius: 3px;
-    background: #00816A;
-    display: inline-block;
-  }
-  
-  .smalltext{
-    padding-top: 5px;
-    font-size: 16px;
-  }
+    box-shadow: 0 0 10px 2px;
+}
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.btn {
+    --hue: var(--hue-neutral);
+    border: 1px solid hsl(var(--hue), 100%, 30%);
+    background-color: hsl(var(--hue), 100%, 50%);
+    border-radius: 5px;
+    padding: 5px 10px;
+    color:cornsilk;
+    outline: none;
+}
+
+.btn:hover {
+    border-color: black;
+}
+
+.btn.correct {
+    --hue: var(--hue-correct);
+    color: black;
+}
+
+.btn.wrong {
+    --hue: var(--hue-wrong);
+}
+
+.start-btn, .next-btn {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hide {
+    display: none;
+}
+
+
+
