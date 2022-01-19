@@ -1,106 +1,99 @@
-const startButton = document.getElementById('start-btn')
-const nextButton = document.getElementById('next-btn')
-const questionContainerElement = document.getElementById('question-container')
-const questionElement = document.getElementById('question')
-const answerButtonsElement = document.getElementById('answer-buttons')
-
-let shuffledQuestions, currentQuestionIndex
-
-startButton.addEventListener('click', startGame)
-nextButton.addEventListener('click', () => {
-    currentQuestionIndex++
-    setNextQuestion()
-})
-
-function startGame() {
- startButton.classList.add('hide')
- shuffledQuestions = questions.sort(() => Math.random() - .5)
- currentQuestionIndex = 0
- questionContainerElement.classList.remove('hide')
- setNextQuestion()
+function Quiz(questions) {
+    this.score = 0;
+    this.questions = questions;
+    this.currentQuestionIndex = 0;
 }
 
-function setNextQuestion() {
-    resetState()
-    showQuestion(shuffledQuestions[currentQuestionIndex])
+var sec = 25;
+var time = setInterval(myTimer, 1000);
+
+function myTimer() {
+    document.getElementById('timer').innerHTML = sec + "sec left";
+    sec--;
+    if (sec == -1) {
+        clearInterval(time);
+        alert("Sorry time's up, please try again!! :(");
+    }
 }
 
-function showQuestion(question) {
-    questionContainerElement.innerText = question.question
-    question.answers.forEach(answer => {
-        const button = document.createElement('button')
-        button.innerText = answer.text
-        button.classList.add('btn')
-        if (answer.correct) {
-            button.dataset.correct = answer.correct
+Quiz.prototype.guess = function(answer) {
+    if(this.getCurrentQuestion().isCorrectAnswer(answer)) {
+        this.score++;
+    }
+    this.currentQuestionIndex++;
+};
+
+Quiz.prototype.getCurrentQuestion = function() {
+    return this.questions[this.currentQuestionIndex];
+};
+
+Quiz.prototype.hasEnded = function() {
+    return this.currentQuestionIndex >= this.questions.length;
+};
+function Question(text, choices, answer) {
+    this.text = text;
+    this.choices = choices;
+    this.answer = answer;
+}
+
+Question.prototype.isCorrectAnswer = function (choice) {
+    return this.answer === choice;
+};
+var QuizUI = {
+    displayNext: function () {
+        if (quiz.hasEnded()) {
+            this.displayScore();
+        } else {
+            this.displayQuestion();
+            this.displayChoices();
+            this.displayProgress();
         }
-        button.addEventListener('click', selectAnswer)
-        answerButtonsElement.appendChild(button)
-    })
-}
-
-
-function resetState() {
-    clearStatusClass(document.body)
-    nextButton.classList.add('hide')
-    while (answerButtonsElement.firstChild) {
-        answerButtonsElement.removeChild(answerButtonsElement.firstChild)
-    }
-}
-
-function selectAnswer(e) {
-    const selectedButton = e.target
-    const correct = selectedButton.dataset.correct
-    setStatusClass(document.body, correct)
-    Array.from(answerButtonsElement.children).forEach(button => {
-        setStatusClass(button, button.dataset.correct)
-    })
-    if (shuffledQuestions.lenght > currentQuestionIndex + 1) {
-        nextButton.classList.remove('hide')
-    } else {
-        startButton.innerText = 'Restart'
-        startButton.classList.remove('hide')
-    }
-    }
-
-function setStatusClass(element, correct) {
-    clearStatusClass(element)
-    if (correct) {
-        element.classList.add('correct')
-    } else {
-        element.classList.add('wrong')
-    }
-}
-
-function clearStatusClass(element) {
-    element.classList.remove('correct')
-    element.classList.remove('wrong')
-}
-
-const questions = [
-    {
-        question: 'Arrays in javaScript can be used to store?',
-        answers: [
-            { text: 'booleans', correct: true },
-            { text: 'console.log', corect: false }
-        ]
     },
-{
-    question: 'A very useful tool used during development and debugging for printing content to the debugger is?',
-    answers: [
-        { text: 'javaScript', correct: false },
-        { text: 'terminal/bash', correct: false },
-        { text: 'for loops', correct: false },
-        { text: 'console.log', correct: true }
-    ]
-},
-{
-    question: 'Commonly used data types DO Not Include?',
-    answers: [
-        { text: 'strings', correct: false },
-        { text: 'booleans', correct: false },
-        { text: 'alerts', correct: true },
-        { text: 'numbers', correct: false }
-    ]
-  },
-]
+    displayQuestion: function() {
+        this.populateIdWithHTML("question", quiz.getCurrentQuestion().text);
+    },
+    displayChoices: function() {
+        var choices = quiz.getCurrentQuestion().choices;
+
+        for(var i = 0; i < choices.length; i++) {
+            this.populateIdWithHTML("choice" + i, choices[i]);
+            this.guessHandler("guess" + i, choices[i]);
+        }
+    },
+    displayScore: function() {
+        var gameOverHTML = "<h1>Game Over</h1>";
+        gameOverHTML += "<h2> Your score is: " + quiz.score + "</h2>";
+        this.populateIdWithHTML("quiz", gameOverHTML);
+    },
+    
+    populateIdWithHTML: function(id, text) {
+        var element = document.getElementById(id);
+        element.innerHTML = text;
+    },
+    guessHandler: function(id, guess) {
+        var button = document.getElementById(id);
+        button.onclick = function() {
+            quiz.guess(guess);
+            QuizUI.displayNext();
+        }
+    },
+    
+    displayProgress: function() {
+        var currentQuestionNumber = quiz.currentQuestionIndex + 1;
+        this.populateIdWithHTML("progress", "Question " + currentQuestionNumber + " of " + quiz.questions.length);
+  }
+};
+// Questions
+var questions = [
+    new Question("Arrays in javaScript can be used to store?", ["Numbers & Strings", "Other Arrays", "Booleans","All of the above"], "All of the above"),
+    new Question("Commonly used data types Do Not Include?", ["Strings", "Alerts", "Booleans","Numbers"], "Alerts"),
+    new Question("A very useful tool used during development and debugging for printing content to the debugger is?", ["javaSript", "Terminal/bash", "For loops","console.log"], "console.log"),
+    new Question("String values must be enclosed within ___ when being assigned to variables?", ["Commas", "Curly brackets", "Quotes","Parenthesis"], "Curly brackets"),
+    new Question("What is javaSript?", ["Paper", "Colors", "css","Programming language"], "Programming language")
+];
+
+// Create Quiz
+var quiz = new Quiz(questions);
+
+// Display Quiz
+QuizUI.displayNext();
